@@ -1,0 +1,357 @@
+@page "/"
+@rendermode InteractiveServer
+
+<style type="text/css">
+    .mud-table-head .header-centered th {
+        text-align: center;
+        font-size: 1.2em;
+    }
+
+   .mud-table-foot .bold-text .mud-table-cell {
+       font-weight: 500;
+   }
+</style>
+
+<PageTitle>Upload File:</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true" Style="text-align: center;">Dashboard</MudText>
+
+
+
+<MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles2">
+    <ActivatorContent>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.CloudUpload">
+            Upload csv
+        </MudButton>
+    </ActivatorContent>
+</MudFileUpload>
+
+
+
+    <h1>Most active User:</h1>
+    @if(createdHashDictionary)
+    {
+        
+            @foreach(KeyValuePair<string, List<ReaderEvent>> i in hashDic)
+                {
+                    if(i.Value.Count > mostActiveUserCount)
+                    {
+                        mostActiveUserCount = i.Value.Count;
+                        mostActiveUser = i.Key;
+                    }
+                }
+            <p>@mostActiveUser</p>
+        
+    }
+
+    <h1>Most active Reader:</h1>
+    @if(createdDictionary)
+        {
+            
+                
+                @foreach(KeyValuePair<string, List<ReaderEvent>> i in dic)
+                    {
+                        if(i.Value.Count > mostActiveReaderCount)
+                        {
+                            mostActiveReaderCount = i.Value.Count;
+                            mostActiveReaderName = i.Value[0].reader;
+                        }
+                    }
+                <p>@mostActiveReaderName</p>   
+            
+        }
+
+    <h1>Busiest Day of the Week:</h1>
+    @if(createdDayOfWeekDictionary)
+    {
+        
+        @foreach(KeyValuePair<string, List<ReaderEvent>> i in dayOfWeekDic)
+            {
+                if(i.Value.Count > busiestDayCount)
+                {
+                    busiestDayCount = i.Value.Count;
+                    busiestDayOfWeek = i.Key;
+                }
+            }
+            <p>@busiestDayOfWeek</p>
+    
+    }
+
+    <h1>Average unique Users per day:</h1>
+    @if(createdDictionary)
+    {
+        int count = 0;
+        List<string> hashList = new List<string>();
+        @foreach(KeyValuePair<string, List<ReaderEvent>> i in dateDic)
+        {
+            if(!hashList.Contains(i.Value[count].getHash()))
+            {
+                hashList.Add(i.Value[count].getHash());
+                count++;
+            }
+        }
+    }
+
+    
+
+
+
+<div style="padding-top: 10px;" >
+ @if(createdDayOfWeekDictionary || dayOfWeekDic.Count > 0)
+    {
+    <MudSimpleTable Style="overflow: auto; " >
+        <tr>
+            <th><h1>Day of the week</h1></th>
+            <th><h1>Number of reader events</h1></th>
+        </tr>
+        <tbody>
+            @foreach(KeyValuePair<string, List<ReaderEvent>> i in dayOfWeekDic)
+                {
+                    <tr>
+                        <td style="text-align: center;">@i.Key</td>
+                        <td style="text-align: center;">@i.Value.Count()</td>
+                    </tr>
+                }
+        </tbody>
+    </MudSimpleTable>
+} 
+</div>
+
+ <div>
+
+    @if(createdDayOfWeekDictionary || dayOfWeekDic.Count > 0) 
+    {
+        <MudChart ChartType="ChartType.Line" ChartSeries="@Series" @bind-SelectedIndex="Index" XAxisLabels="@XAxisLabels" Width="100%" Height="350px" ChartOptions="@Options"/>      
+    }
+
+</div> 
+
+
+@code {
+    public bool createdDictionary = false;
+    public bool createdDayOfWeekDictionary = false;
+    public bool createdHashDictionary = false;
+    public string FileName { get; set; } = "";
+    public long FileSize { get; set; }
+    public string FileType { get; set; } = "";
+    public DateTimeOffset LastModified { get; set; }
+    public string ErrorMessage { get; set; } = "";
+    private static List<ReaderEvent> masterList = new List<ReaderEvent>();
+    private static Dictionary<string, List<ReaderEvent>> dic = new Dictionary<string, List<ReaderEvent>>();
+    private static Dictionary<string, List<ReaderEvent>> hashDic = new Dictionary<string, List<ReaderEvent>>();
+    private static Dictionary<string, List<ReaderEvent>> dayOfWeekDic = new Dictionary<string, List<ReaderEvent>>();
+    private static Dictionary<string, List<ReaderEvent>> dateDic = new Dictionary<string, List<ReaderEvent>>();
+    private int mostActiveReaderCount = 0;
+    private string mostActiveReaderName = "";
+    private string mostActiveUser = "";
+    private int mostActiveUserCount = 0;
+    private double[] eventCounts = new double[7];
+    private double busiestDayCount = 0;
+    private string busiestDayOfWeek = "";
+    private bool createdDateDictionary = false;
+    
+
+
+    const int MAX_FILESIZE = 10000000; // 2 MB
+
+    private int Index = -1; //default value cannot be 0 -> first selectedindex is 0.
+    public ChartOptions Options = new ChartOptions();
+    
+    public static List<ChartSeries> Series = new List<ChartSeries>()
+    {
+        new ChartSeries() { Name = "Reader events", Data = new double[6] },
+    };
+    public string[] XAxisLabels = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+
+
+    IList<IBrowserFile> files = new List<IBrowserFile>();
+     private async void UploadFiles2(IBrowserFile file)
+     {
+        files.Add(file);
+        await FileUploaded(file);
+        //TODO upload the files to the server
+     }
+    // Handles a single file
+
+
+     public async Task FileUploaded(IBrowserFile e)
+     {
+         var browserFile = e;
+
+
+         if (browserFile != null)
+         {
+             FileSize = browserFile.Size;
+             FileType = browserFile.ContentType;
+             FileName = browserFile.Name;
+             LastModified = browserFile.LastModified;
+
+
+             try
+             { //save and upload file to the disk
+                 var fileStream = browserFile.OpenReadStream(MAX_FILESIZE);
+                 var destinationStream = new FileStream(FileName, FileMode.Create);
+                 await fileStream.CopyToAsync(destinationStream);
+                 destinationStream.Close();
+
+
+                //create stream reader and begin reading lines
+                 StreamReader sr = new StreamReader(FileName);
+                 string? line = sr.ReadLine();
+                 while((line = sr.ReadLine()) != null)
+                 {
+                    string[] data = line.Split(",");
+                    masterList.Add(new ReaderEvent(data[0], data[1], data[2], data[3], data[4], data[5]));
+                   
+                 }
+                 makeDictionary(masterList);
+                 dayOfTheWeekDictionary(masterList);
+                 makeHashDictionary(masterList);
+                 dateDictionary(masterList);
+                 createChartSeries(dayOfWeekDic);
+                 
+                 
+             }
+             catch (Exception exception)
+             {
+                 ErrorMessage = exception.Message;
+             }
+         }
+     }
+
+      public Dictionary<string, List<ReaderEvent>> dayOfTheWeekDictionary(List<ReaderEvent> bigList)
+        {
+            foreach(ReaderEvent r in bigList)
+            {
+                
+                if(!dayOfWeekDic.ContainsKey(r.getDate().ToString("dddd")))
+                {
+                    dayOfWeekDic.Add(r.getDate().ToString("dddd"), new List<ReaderEvent>());
+                }
+                dayOfWeekDic[r.getDate().ToString("dddd")].Add(r);
+               
+            }
+            createdDayOfWeekDictionary = true;
+            StateHasChanged();
+            return dayOfWeekDic;
+        } 
+
+      public Dictionary<string, List<ReaderEvent>> dateDictionary(List<ReaderEvent> bigList)
+        {
+            foreach(ReaderEvent r in bigList)
+            {
+                
+                if(!dateDic.ContainsKey(r.getDate().ToString("m")))
+                {
+                    dateDic.Add(r.getDate().ToString("m"), new List<ReaderEvent>());
+                }
+                dateDic[r.getDate().ToString("m")].Add(r);
+               
+            }
+            createdDateDictionary = true;
+            StateHasChanged();
+            return dateDic;
+        } 
+     
+     public Dictionary<string, List<ReaderEvent>> makeDictionary(List<ReaderEvent> bigList)
+        {
+            foreach(ReaderEvent r in bigList)
+            {
+                if(!dic.ContainsKey(r.getReaderID()))
+                {
+                    dic.Add(r.getReaderID(), new List<ReaderEvent>());
+                }
+                dic[r.getReaderID()].Add(r);
+               
+            }
+            createdDictionary = true;
+            StateHasChanged();
+            return dic;
+        }
+
+     public Dictionary<string, List<ReaderEvent>> makeHashDictionary(List<ReaderEvent> bigList)
+        {
+            foreach(ReaderEvent r in bigList)
+            {
+                if(!hashDic.ContainsKey(r.getHash()))
+                {
+                    hashDic.Add(r.getHash(), new List<ReaderEvent>());
+                }
+                hashDic[r.getHash()].Add(r);
+               
+            }
+            createdHashDictionary = true;
+            StateHasChanged();
+            return hashDic;
+        }
+     public void createChartSeries(Dictionary<string, List<ReaderEvent>> masterDictionary)
+     {
+        
+        foreach (var kvp in masterDictionary)
+        {
+            switch(kvp.Key)
+            {
+                case "Sunday": eventCounts[6] = kvp.Value.Count; break;
+                case "Monday": eventCounts[0] = kvp.Value.Count; break;
+                case "Tuesday": eventCounts[1] = kvp.Value.Count; break;
+                case "Wednesday": eventCounts[2] = kvp.Value.Count; break;
+                case "Thursday": eventCounts[3] = kvp.Value.Count; break;
+                case "Friday": eventCounts[4] = kvp.Value.Count; break;
+                case "Saturday": eventCounts[5] = kvp.Value.Count; break;
+            }
+        }
+        Series[0].Data = eventCounts;
+        StateHasChanged();
+
+     }
+
+     
+
+
+     public class ReaderEvent
+     {
+        public DateTime date;
+        public string site;
+        public string reader;
+        public string hash;
+        public string devid;
+        public string machine;
+
+
+
+
+        public ReaderEvent(string reportedDate, string reportedSite, string reportedReader, string reportedHash, string reportedDevid, string reportedMachine)
+        {
+            date = DateTime.Parse(reportedDate);;
+            site = reportedSite;
+            reader = reportedReader;
+            hash = reportedHash;
+            devid = reportedDevid;
+            machine = reportedMachine;
+
+
+        }
+        public string getReaderID() => devid + machine;
+       
+
+
+        public DateTime getDate() => date;
+        public string getSite() => site;
+        public string getReader() => reader;
+        public string getHash() => hash;
+        public string getDevid() => devid;
+        public string getMachine() => machine;
+
+
+
+
+
+
+     }
+
+
+
+ 
+}

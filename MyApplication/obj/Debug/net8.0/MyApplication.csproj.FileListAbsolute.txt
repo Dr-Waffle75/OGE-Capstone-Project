@@ -42,3 +42,4 @@ c:\Users\oaknu\Desktop\Capstone\OGE Capstone Project\MyApplication\obj\Debug\net
 c:\Users\oaknu\Desktop\Capstone\OGE Capstone Project\MyApplication\obj\Debug\net8.0\MyApplication.pdb
 c:\Users\oaknu\Desktop\Capstone\OGE Capstone Project\MyApplication\obj\Debug\net8.0\MyApplication.genruntimeconfig.cache
 c:\Users\oaknu\Desktop\Capstone\OGE Capstone Project\MyApplication\obj\Debug\net8.0\ref\MyApplication.dll
+c:\Users\oaknu\Desktop\Capstone\OGE Capstone Project\MyApplication\obj\Debug\net8.0\MyApplication.sourcelink.json

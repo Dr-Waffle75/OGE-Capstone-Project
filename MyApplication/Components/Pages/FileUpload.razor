@@ -80,44 +80,42 @@
     }
 
     <h1>Average unique Users per day:</h1>
-    @if(createdDictionary)
+    @if(createdDateDictionary)
     {
-        int count = 0;
-        List<string> hashList = new List<string>();
-        @foreach(KeyValuePair<string, List<ReaderEvent>> i in dateDic)
+
+        List<int> uniqueHashesForDay = new List<int>();
+        int averageUniqueUsers = 0;
+        
+        @foreach(var day in dateDic.Keys)
         {
-            if(!hashList.Contains(i.Value[count].getHash()))
+            List<string> seenHashes = new List<string>();
+
+            foreach(ReaderEvent r in dateDic[day])
             {
-                hashList.Add(i.Value[count].getHash());
-                count++;
+                if(!seenHashes.Contains(r.getHash()))
+                {
+                    seenHashes.Add(r.getHash());
+                }
             }
+
+            uniqueHashesForDay.Add(seenHashes.Count());
+            
+            
         }
+        foreach(int i in uniqueHashesForDay)
+            {
+                averageUniqueUsers += i;
+            }
+            
+        averageUniqueUsers = averageUniqueUsers / uniqueHashesForDay.Count();
+        <p>@averageUniqueUsers</p>
+        
     }
 
     
 
 
 
-<div style="padding-top: 10px;" >
- @if(createdDayOfWeekDictionary || dayOfWeekDic.Count > 0)
-    {
-    <MudSimpleTable Style="overflow: auto; " >
-        <tr>
-            <th><h1>Day of the week</h1></th>
-            <th><h1>Number of reader events</h1></th>
-        </tr>
-        <tbody>
-            @foreach(KeyValuePair<string, List<ReaderEvent>> i in dayOfWeekDic)
-                {
-                    <tr>
-                        <td style="text-align: center;">@i.Key</td>
-                        <td style="text-align: center;">@i.Value.Count()</td>
-                    </tr>
-                }
-        </tbody>
-    </MudSimpleTable>
-} 
-</div>
 
  <div>
 

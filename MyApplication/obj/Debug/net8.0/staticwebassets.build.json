@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "5xVluAQsm6EYJSerB9UQvYu8fkYH1ChIkCUdqactS+U=",
+  "Hash": "0g6XplnxG9xwfM4Ej79Pqu2zBe8cgm/aesMx0SayYjA=",
   "Source": "MyApplication",
   "BasePath": "_content/MyApplication",
   "Mode": "Default",
@@ -10,7 +10,7 @@
     {
       "Name": "MyApplication\\wwwroot",
       "Source": "MyApplication",
-      "ContentRoot": "c:\\Users\\oaknu\\Desktop\\Capstone\\OGE Capstone Project\\MyApplication\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\oaknu\\Desktop\\Capstone\\OGE Capstone Project\\MyApplication\\wwwroot\\",
       "BasePath": "_content/MyApplication",
       "Pattern": "**"
     }
@@ -59,10 +59,10 @@
       "OriginalItemSpec": "C:\\Users\\oaknu\\.nuget\\packages\\mudblazor\\8.5.1\\staticwebassets\\MudBlazor.min.js"
     },
     {
-      "Identity": "c:\\Users\\oaknu\\Desktop\\Capstone\\OGE Capstone Project\\MyApplication\\wwwroot\\favicon.ico",
+      "Identity": "C:\\Users\\oaknu\\Desktop\\Capstone\\OGE Capstone Project\\MyApplication\\wwwroot\\favicon.ico",
       "SourceId": "MyApplication",
       "SourceType": "Discovered",
-      "ContentRoot": "c:\\Users\\oaknu\\Desktop\\Capstone\\OGE Capstone Project\\MyApplication\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\oaknu\\Desktop\\Capstone\\OGE Capstone Project\\MyApplication\\wwwroot\\",
       "BasePath": "_content/MyApplication",
       "RelativePath": "favicon#[.{fingerprint}]?.ico",
       "AssetKind": "All",
@@ -247,7 +247,7 @@
     },
     {
       "Route": "favicon.2jeq8efc6q.ico",
-      "AssetFile": "c:\\Users\\oaknu\\Desktop\\Capstone\\OGE Capstone Project\\MyApplication\\wwwroot\\favicon.ico",
+      "AssetFile": "C:\\Users\\oaknu\\Desktop\\Capstone\\OGE Capstone Project\\MyApplication\\wwwroot\\favicon.ico",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -292,7 +292,7 @@
     },
     {
       "Route": "favicon.ico",
-      "AssetFile": "c:\\Users\\oaknu\\Desktop\\Capstone\\OGE Capstone Project\\MyApplication\\wwwroot\\favicon.ico",
+      "AssetFile": "C:\\Users\\oaknu\\Desktop\\Capstone\\OGE Capstone Project\\MyApplication\\wwwroot\\favicon.ico",
       "Selectors": [],
       "ResponseHeaders": [
         {

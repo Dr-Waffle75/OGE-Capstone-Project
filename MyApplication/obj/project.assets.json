@@ -706,11 +706,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\oaknu\\Desktop\\Capstone\\OGE Capstone Project\\MyApplication\\MyApplication.csproj",
+      "projectUniqueName": "C:\\Users\\oaknu\\Desktop\\Capstone\\GitHub Clones\\OGE-Capstone-Project\\MyApplication\\MyApplication.csproj",
       "projectName": "MyApplication",
-      "projectPath": "C:\\Users\\oaknu\\Desktop\\Capstone\\OGE Capstone Project\\MyApplication\\MyApplication.csproj",
+      "projectPath": "C:\\Users\\oaknu\\Desktop\\Capstone\\GitHub Clones\\OGE-Capstone-Project\\MyApplication\\MyApplication.csproj",
       "packagesPath": "C:\\Users\\oaknu\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\oaknu\\Desktop\\Capstone\\OGE Capstone Project\\MyApplication\\obj\\",
+      "outputPath": "C:\\Users\\oaknu\\Desktop\\Capstone\\GitHub Clones\\OGE-Capstone-Project\\MyApplication\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\oaknu\\AppData\\Roaming\\NuGet\\NuGet.Config"

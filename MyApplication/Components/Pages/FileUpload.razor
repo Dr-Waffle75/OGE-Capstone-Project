@@ -11,7 +11,6 @@
        font-weight: 500;
    }
 </style>
-
 <PageTitle>Upload File:</PageTitle>
 
 <MudText Typo="Typo.h3" GutterBottom="true" Style="text-align: center;">Dashboard</MudText>
@@ -27,6 +26,7 @@
         </MudButton>
     </ActivatorContent>
 </MudFileUpload>
+
 
 
 
@@ -111,20 +111,17 @@
         <p>@averageUniqueUsers</p>
         
     }
+    @if(initializedChartSeries)
+    {
+        <p>test</p>
+        <MudChart ChartType="ChartType.Line" ChartSeries="@series" @bind-SelectedIndex="@index" XAxisLabels="@xAxisLabels" Width="1500px" Height="550px" ChartOptions="@options" AxisChartOptions="@axisChartOptions" />
+    }
 
     
 
 
 
 
- <div>
-
-    @if(createdDayOfWeekDictionary || dayOfWeekDic.Count > 0) 
-    {
-        <MudChart ChartType="ChartType.Line" ChartSeries="@Series" @bind-SelectedIndex="Index" XAxisLabels="@XAxisLabels" Width="100%" Height="350px" ChartOptions="@Options"/>      
-    }
-
-</div> 
 
 
 @code {
@@ -150,18 +147,19 @@
     private string busiestDayOfWeek = "";
     private bool createdDateDictionary = false;
     
+    private int index = -1; //default value cannot be 0 -> first selectedindex is 0.
+    private ChartOptions options = new ChartOptions();
+    private AxisChartOptions axisChartOptions = new AxisChartOptions();
+    private string width = "650px";
+    private string height = "350px";
+
+    private List<ChartSeries> series = new List<ChartSeries>()
+    {};
+    private string[] xAxisLabels = {};
+    private bool initializedChartSeries = false;
 
 
     const int MAX_FILESIZE = 10000000; // 2 MB
-
-    private int Index = -1; //default value cannot be 0 -> first selectedindex is 0.
-    public ChartOptions Options = new ChartOptions();
-    
-    public static List<ChartSeries> Series = new List<ChartSeries>()
-    {
-        new ChartSeries() { Name = "Reader events", Data = new double[6] },
-    };
-    public string[] XAxisLabels = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
 
     IList<IBrowserFile> files = new List<IBrowserFile>();
@@ -208,7 +206,7 @@
                  dayOfTheWeekDictionary(masterList);
                  makeHashDictionary(masterList);
                  dateDictionary(masterList);
-                 createChartSeries(dayOfWeekDic);
+                 initializeChartSeries();
                  
                  
              }
@@ -248,6 +246,7 @@
                 dateDic[r.getDate().ToString("m")].Add(r);
                
             }
+
             createdDateDictionary = true;
             StateHasChanged();
             return dateDic;
@@ -284,26 +283,24 @@
             StateHasChanged();
             return hashDic;
         }
-     public void createChartSeries(Dictionary<string, List<ReaderEvent>> masterDictionary)
-     {
-        
-        foreach (var kvp in masterDictionary)
-        {
-            switch(kvp.Key)
-            {
-                case "Sunday": eventCounts[6] = kvp.Value.Count; break;
-                case "Monday": eventCounts[0] = kvp.Value.Count; break;
-                case "Tuesday": eventCounts[1] = kvp.Value.Count; break;
-                case "Wednesday": eventCounts[2] = kvp.Value.Count; break;
-                case "Thursday": eventCounts[3] = kvp.Value.Count; break;
-                case "Friday": eventCounts[4] = kvp.Value.Count; break;
-                case "Saturday": eventCounts[5] = kvp.Value.Count; break;
-            }
-        }
-        Series[0].Data = eventCounts;
-        StateHasChanged();
 
-     }
+    public void initializeChartSeries()
+        {
+            axisChartOptions.MatchBoundsToSize = true;
+            xAxisLabels = dateDic.Keys.ToArray();
+
+            List<ReaderEvent>[] pullArrayOfEvents = dateDic.Values.ToArray();
+            List<double> listOfEventsForEachDayOfTheWeek = new List<double>();
+
+            foreach(List<ReaderEvent> relist in pullArrayOfEvents)
+                {
+                    listOfEventsForEachDayOfTheWeek.Add(relist.Count());
+                }
+
+            series.Add(new ChartSeries { Name = "Number of Scans", Data = listOfEventsForEachDayOfTheWeek.ToArray() } );
+            initializedChartSeries = true;
+            StateHasChanged();
+        }
 
      
 

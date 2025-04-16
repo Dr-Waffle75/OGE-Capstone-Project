@@ -697,7 +697,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "MudBlazor >= 8.*"
+      "MudBlazor >= 8.5.1"
     ]
   },
   "packageFolders": {
@@ -745,7 +745,7 @@
         "dependencies": {
           "MudBlazor": {
             "target": "Package",
-            "version": "[8.*, )"
+            "version": "[8.5.1, )"
           }
         },
         "imports": [

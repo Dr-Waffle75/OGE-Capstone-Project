@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "WdeKTHKzZHM=",
+  "dgSpecHash": "sBaLk/iB1UU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\oaknu\\Desktop\\Capstone\\OGE Capstone Project\\MyApplication\\MyApplication.csproj",
+  "projectFilePath": "C:\\Users\\oaknu\\Desktop\\Capstone\\GitHub Clones\\OGE-Capstone-Project\\MyApplication\\MyApplication.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\oaknu\\.nuget\\packages\\microsoft.aspnetcore.authorization\\8.0.12\\microsoft.aspnetcore.authorization.8.0.12.nupkg.sha512",
     "C:\\Users\\oaknu\\.nuget\\packages\\microsoft.aspnetcore.components\\8.0.12\\microsoft.aspnetcore.components.8.0.12.nupkg.sha512",
@@ -21,12 +21,5 @@
     "C:\\Users\\oaknu\\.nuget\\packages\\mudblazor\\8.5.1\\mudblazor.8.5.1.nupkg.sha512",
     "C:\\Users\\oaknu\\.nuget\\packages\\system.io.pipelines\\8.0.0\\system.io.pipelines.8.0.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problem reading the cache file C:\\Users\\oaknu\\Desktop\\Capstone\\OGE Capstone Project\\MyApplication\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
-    }
-  ]
+  "logs": []
 }

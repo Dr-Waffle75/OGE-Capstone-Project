@@ -239,11 +239,11 @@
             foreach(ReaderEvent r in bigList)
             {
                 
-                if(!dateDic.ContainsKey(r.getDate().ToString("m")))
+                if(!dateDic.ContainsKey(r.getDate().ToString("MMM dd")))
                 {
-                    dateDic.Add(r.getDate().ToString("m"), new List<ReaderEvent>());
+                    dateDic.Add(r.getDate().ToString("MMM dd"), new List<ReaderEvent>());
                 }
-                dateDic[r.getDate().ToString("m")].Add(r);
+                dateDic[r.getDate().ToString("MMM dd")].Add(r);
                
             }
 

@@ -17,7 +17,7 @@
 
 
 
-<MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles2">
+<MudFileUpload T="IBrowserFile" Accept=".csv" FilesChanged="UploadFiles2">
     <ActivatorContent>
         <MudButton Variant="Variant.Filled"
                    Color="Color.Primary"
@@ -60,6 +60,7 @@
                         }
                     }
                 <p>@mostActiveReaderName</p>   
+                
             
         }
 
@@ -111,9 +112,15 @@
         <p>@averageUniqueUsers</p>
         
     }
+
+    @if(dupeCount > 0)
+    {
+       <p>@dupeCount duplicates</p> 
+    }
+    
     @if(initializedChartSeries)
     {
-        <p>test</p>
+
         <MudChart ChartType="ChartType.Line" ChartSeries="@series" @bind-SelectedIndex="@index" XAxisLabels="@xAxisLabels" Width="1500px" Height="550px" ChartOptions="@options" AxisChartOptions="@axisChartOptions" />
     }
 
@@ -147,19 +154,17 @@
     private string busiestDayOfWeek = "";
     private bool createdDateDictionary = false;
     
-    private int index = -1; //default value cannot be 0 -> first selectedindex is 0.
+    private int index = -1; 
     private ChartOptions options = new ChartOptions();
     private AxisChartOptions axisChartOptions = new AxisChartOptions();
-    private string width = "650px";
-    private string height = "350px";
 
     private List<ChartSeries> series = new List<ChartSeries>()
     {};
     private string[] xAxisLabels = {};
     private bool initializedChartSeries = false;
+    private int dupeCount = 0;
 
-
-    const int MAX_FILESIZE = 10000000; // 2 MB
+    const int MAX_FILESIZE = 10000000;
 
 
     IList<IBrowserFile> files = new List<IBrowserFile>();
@@ -167,9 +172,9 @@
      {
         files.Add(file);
         await FileUploaded(file);
-        //TODO upload the files to the server
+ 
      }
-    // Handles a single file
+  
 
 
      public async Task FileUploaded(IBrowserFile e)
@@ -196,12 +201,25 @@
                 //create stream reader and begin reading lines
                  StreamReader sr = new StreamReader(FileName);
                  string? line = sr.ReadLine();
+                 string? previousLine = "";
+                 
                  while((line = sr.ReadLine()) != null)
                  {
-                    string[] data = line.Split(",");
-                    masterList.Add(new ReaderEvent(data[0], data[1], data[2], data[3], data[4], data[5]));
-                   
+
+                    if(line.Equals(previousLine))
+                        {
+                            dupeCount++;
+                        }
+
+                    else
+                    {
+                        string[] data = line.Split(",");
+                        masterList.Add(new ReaderEvent(data[0], data[1], data[2], data[3], data[4], data[5]));
+                    }
+                    
+                    previousLine = line;
                  }
+
                  makeDictionary(masterList);
                  dayOfTheWeekDictionary(masterList);
                  makeHashDictionary(masterList);
